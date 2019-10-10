@@ -1,18 +1,22 @@
-import express, { Application } from 'express';
+import express, { Application, json, urlencoded } from 'express';
 import logging from './middleware/logger';
 import morgan from 'morgan';
-import genreRouter from './routes/genres';
 import mongoose from 'mongoose';
+import genreRouter from './routes/genres';
+import customerRouter from './routes/customer';
+import movieRouter from './routes/movie';
 
 export const app: Application = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
 
 app.use(logging);
 app.use('/api/genres', genreRouter);
+app.use('/api/customer', customerRouter);
+app.use('/api/movie', movieRouter);
 
 const connectToDb = async () => {
   try {
