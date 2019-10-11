@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import genreRouter from './routes/genres';
 import customerRouter from './routes/customer';
 import movieRouter from './routes/movie';
+import rentalRouter from './routes/rental';
 
 export const app: Application = express();
 
@@ -17,6 +18,7 @@ app.use(logging);
 app.use('/api/genres', genreRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/movie', movieRouter);
+app.use('/api/rental', rentalRouter);
 
 const connectToDb = async () => {
   try {
