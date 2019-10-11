@@ -1,7 +1,7 @@
 import Joi from 'joi';
-import mongoose, { Mongoose } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
 
-export const genreSchema = new mongoose.Schema({
+export const genreSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -10,7 +10,7 @@ export const genreSchema = new mongoose.Schema({
   }
 });
 
-export const Genre = mongoose.model('Genre', genreSchema);
+export const Genre = model('Genre', genreSchema) || models.Genre;
 
 interface JoiSchema {
   name: Joi.StringSchema;

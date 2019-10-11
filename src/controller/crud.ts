@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Joi from 'joi';
+import { validateInput } from './../util/validation';
 
 export const getAll = (model: any) => async (req: Request, res: Response) => {
   try {
@@ -14,7 +14,7 @@ export const getAll = (model: any) => async (req: Request, res: Response) => {
 // prettier-ignore
 export const create = (model: any, schema: any) => async (req: Request, res: Response) => {
   try {
-    const { error } = validate(req.body, schema);
+    const { error } = validateInput(req.body, schema);
     if (error) return res.status(400).send(error.details[0].message);
   
     let doc = new model({...req.body});
@@ -30,7 +30,7 @@ export const create = (model: any, schema: any) => async (req: Request, res: Res
 // prettier-ignore
 export const update = (model: any, schema: any) => async (req: Request, res: Response) => {
   try {
-    const { error } = validate(req.body, schema);
+    const { error } = validateInput(req.body, schema);
     if (error) return res.status(400).send(error.details[0].message);
 
     const doc = await model.findByIdAndUpdate(req.params.id, ...req.body, {
@@ -73,9 +73,4 @@ export const getById = (model: any) => async (req: Request, res: Response) => {
     console.error(e);
     res.status(400).end();
   }
-};
-
-// prettier-ignore
-const validate = (model: any, joiSchema: Joi.Schema): Joi.ValidationResult<any> => {
-  return Joi.validate(model, joiSchema);
 };

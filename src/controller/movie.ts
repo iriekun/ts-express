@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import Joi from 'joi';
 import { Genre } from './../model/genre';
+import { validateInput } from './../util/validation';
 
-export const create = (model: any, schema: any) => async (
+export const create = (model: any, joiSchema: any) => async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { error } = validate(req.body, schema);
+    const { error } = validateInput(req.body, joiSchema);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const movie = await model.find({}).select('title -_id');
+    const movie = await model.find({}).select('title -_id'); //select title exclude _id
     if (movie)
       return res.status(400).send('This movie title is already exsit!');
 
@@ -31,8 +31,3 @@ export const create = (model: any, schema: any) => async (
     res.status(400).end();
   }
 };
-
-// prettier-ignore
-const validate = (model: any, joiSchema: Joi.Schema): Joi.ValidationResult<any> => {
-    return Joi.validate(model, joiSchema);
-  };
