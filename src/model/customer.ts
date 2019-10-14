@@ -22,11 +22,11 @@ export const customerSchema = new Schema({
 
 export const Customer = models.Customer || model('Customer', customerSchema);
 
-export interface JoiSchema {
+export type JoiSchema = {
   name: Joi.StringSchema;
   isGold: Joi.BooleanSchema;
   phone: Joi.StringSchema;
-}
+};
 
 //prettier-ignore
 export const joiSchema: JoiSchema = {

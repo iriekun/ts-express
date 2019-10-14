@@ -10,10 +10,6 @@ export const create = (model: any, joiSchema: any) => async (
   const { error } = validateInput(req.body, joiSchema);
   if (error) return res.status(400).send(error.details[0].message);
   try {
-    const movie = await model.find({ title: req.body.title });
-    if (movie.length)
-      return res.status(400).send('This movie title is already exist!');
-
     if (!Types.ObjectId.isValid(req.body.genreId))
       return res.status(400).send('Invalid genre ID');
     const genre = await Genre.findById(req.body.genreId);

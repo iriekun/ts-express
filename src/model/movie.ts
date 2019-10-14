@@ -8,7 +8,8 @@ export const movieSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 5,
-    maxlength: 255
+    maxlength: 255,
+    unique: true
   },
   numberInStock: {
     type: Number,
@@ -33,12 +34,12 @@ export const Movie =
 // Models registred on the default mongoose connection.
 // prevent overwriteModelError
 
-export interface JoiSchema {
+export type JoiSchema = {
   title: Joi.StringSchema;
   numberInStock: Joi.NumberSchema;
   dailyRentalRate: Joi.NumberSchema;
   genreId: Joi.StringSchema;
-}
+};
 
 export const joiSchema: JoiSchema = {
   title: Joi.string()

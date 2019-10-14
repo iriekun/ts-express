@@ -6,6 +6,7 @@ import genreRouter from './routes/genres';
 import customerRouter from './routes/customer';
 import movieRouter from './routes/movie';
 import rentalRouter from './routes/rental';
+import userRouter from './routes/user';
 
 export const app: Application = express();
 
@@ -13,12 +14,12 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
-
 app.use(logging);
 app.use('/api/genre', genreRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/rental', rentalRouter);
+app.use('/api/user', userRouter);
 
 const connectToDb = async () => {
   try {
@@ -27,7 +28,8 @@ const connectToDb = async () => {
       'mongodb://localhost/vidnet:27017?replicaSet=rsName',
       {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
       }
     );
     if (connected) console.log('db connected');

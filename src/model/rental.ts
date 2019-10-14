@@ -57,10 +57,10 @@ const rentalSchema = new Schema({
 
 export const Rental = models.Rental || model('Rental', rentalSchema);
 
-interface JoiSchema {
+export type JoiSchema = {
   customerId: Joi.StringSchema;
   movieId: Joi.StringSchema;
-}
+};
 
 export const joiSchema: JoiSchema = {
   customerId: Joi.string().required(),
