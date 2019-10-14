@@ -15,7 +15,7 @@ app.use(urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use(logging);
-app.use('/api/genres', genreRouter);
+app.use('/api/genre', genreRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/rental', rentalRouter);
@@ -23,10 +23,13 @@ app.use('/api/rental', rentalRouter);
 const connectToDb = async () => {
   try {
     console.log('connecting to db...');
-    const connected = await mongoose.connect('mongodb://localhost/vidnet', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    const connected = await mongoose.connect(
+      'mongodb://localhost/vidnet:27017?replicaSet=rsName',
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      }
+    );
     if (connected) console.log('db connected');
   } catch (error) {
     console.log(error);

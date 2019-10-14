@@ -20,7 +20,7 @@ export const customerSchema = new Schema({
   }
 });
 
-export const Customer = model('Customer', customerSchema) || models.Customer;
+export const Customer = models.Customer || model('Customer', customerSchema);
 
 export interface JoiSchema {
   name: Joi.StringSchema;

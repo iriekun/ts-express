@@ -6,13 +6,12 @@ export const create = (model: any, joiSchema: any) => async (
   req: Request,
   res: Response
 ) => {
+  const { error } = validateInput(req.body, joiSchema);
+  if (error) return res.status(400).send(error.details[0].message);
   try {
-    const { error } = validateInput(req.body, joiSchema);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const movie = await model.find({}).select('title -_id'); //select title exclude _id
-    if (movie)
-      return res.status(400).send('This movie title is already exsit!');
+    const movie = await model.find({ title: req.body.title });
+    if (movie.length)
+      return res.status(400).send('This movie title is already exist!');
 
     const genre = await Genre.findById(req.body.genreId);
     if (!genre) return res.status(400).send('Invalid genre!');

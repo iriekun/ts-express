@@ -13,10 +13,9 @@ export const getAll = (model: any) => async (req: Request, res: Response) => {
 
 // prettier-ignore
 export const create = (model: any, schema: any) => async (req: Request, res: Response) => {
+  const { error } = validateInput(req.body, schema);
+  if (error) return res.status(400).send(error.details[0].message);
   try {
-    const { error } = validateInput(req.body, schema);
-    if (error) return res.status(400).send(error.details[0].message);
-  
     let doc = new model({...req.body});
     doc = await doc.save();
   
@@ -29,10 +28,9 @@ export const create = (model: any, schema: any) => async (req: Request, res: Res
 
 // prettier-ignore
 export const update = (model: any, schema: any) => async (req: Request, res: Response) => {
+  const { error } = validateInput(req.body, schema);
+  if (error) return res.status(400).send(error.details[0].message);
   try {
-    const { error } = validateInput(req.body, schema);
-    if (error) return res.status(400).send(error.details[0].message);
-
     const doc = await model.findByIdAndUpdate(req.params.id, ...req.body, {
       new: true
     });

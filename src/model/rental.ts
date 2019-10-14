@@ -55,7 +55,7 @@ const rentalSchema = new Schema({
   }
 });
 
-export const Rental = model('Rental', rentalSchema) || models.Rental;
+export const Rental = models.Rental || model('Rental', rentalSchema);
 
 interface JoiSchema {
   customerId: Joi.StringSchema;
