@@ -10,7 +10,7 @@ export const genreSchema = new Schema({
   }
 });
 
-export const Genre = model('Genre', genreSchema) || models.Genre;
+export const Genre = models.Genre || model('Genre', genreSchema);
 
 interface JoiSchema {
   name: Joi.StringSchema;

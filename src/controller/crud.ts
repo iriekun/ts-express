@@ -16,8 +16,8 @@ export const create = (model: any, schema: any) => async (req: Request, res: Res
   const { error } = validateInput(req.body, schema);
   if (error) return res.status(400).send(error.details[0].message);
   try {
-    let doc = new model({...req.body});
-    doc = await doc.save();
+    const doc = new model({...req.body});
+    await doc.save();
   
     res.status(200).json({ data: doc });
   } catch (e) {

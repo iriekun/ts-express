@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Genre } from './../model/genre';
 import { validateInput } from './../util/validation';
+import { Types } from 'mongoose';
 
 export const create = (model: any, joiSchema: any) => async (
   req: Request,
@@ -13,16 +14,21 @@ export const create = (model: any, joiSchema: any) => async (
     if (movie.length)
       return res.status(400).send('This movie title is already exist!');
 
+    if (!Types.ObjectId.isValid(req.body.genreId))
+      return res.status(400).send('Invalid genre ID');
     const genre = await Genre.findById(req.body.genreId);
     if (!genre) return res.status(400).send('Invalid genre!');
 
-    let doc = new model({
+    const doc = new model({
       title: req.body.title,
       numberInStock: req.body.numberInStock,
       dailyRentalRate: req.body.dailyRentalRate,
-      genre: genre
+      genre: {
+        _id: genre._id,
+        name: genre.name
+      }
     });
-    doc = await doc.save();
+    await doc.save();
 
     res.status(200).json({ data: doc });
   } catch (e) {

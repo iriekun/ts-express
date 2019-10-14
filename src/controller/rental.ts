@@ -3,7 +3,7 @@ import { validateInput } from './../util/validation';
 import { Rental, joiSchema } from './../model/rental';
 import { Movie } from './../model/movie';
 import { Customer } from './../model/customer';
-import { startSession } from 'mongoose';
+import { startSession, Types } from 'mongoose';
 
 export const getAll = () => async (req: Request, res: Response) => {
   try {
@@ -24,10 +24,13 @@ export const create = () => async (req: Request, res: Response) => {
   session.startTransaction();
 
   try {
+    if (!Types.ObjectId.isValid(req.body.customerId))
+      return res.status(400).send('Invalid customer ID');
     const customer = await Customer.findById(req.body.customerId);
     if (!customer) return res.status(400).send('Invalid customer');
 
-    // always pass session to find queries when the data is needed for the transaction session
+    if (!Types.ObjectId.isValid(req.body.movieId))
+      return res.status(400).send('Invalid movie ID'); // always pass session to find queries when the data is needed for the transaction session
     const movie = await Movie.findById(req.body.movieId).session(session);
     if (!movie) return res.status(400).send('Invalid movie!');
 
