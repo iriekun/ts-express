@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Genre } from './../model/genre';
 import { validateInput } from './../util/validation';
 import { Types } from 'mongoose';
+import auth from './../middleware/auth';
 
 export const create = (model: any, joiSchema: any) => async (
   req: Request,

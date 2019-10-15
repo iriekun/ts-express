@@ -1,12 +1,12 @@
 import express, { Application, json, urlencoded } from 'express';
-import logging from './middleware/logger';
+import auth from './middleware/auth';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import genreRouter from './routes/genres';
 import customerRouter from './routes/customer';
 import movieRouter from './routes/movie';
 import rentalRouter from './routes/rental';
-import userRouter from './routes/user';
+import authRouter from './routes/auth';
 
 export const app: Application = express();
 
@@ -14,12 +14,11 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
-app.use(logging);
-app.use('/api/genre', genreRouter);
+app.use('/api/genre', auth, genreRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/rental', rentalRouter);
-app.use('/api/user', userRouter);
+app.use('/', auth, authRouter);
 
 const connectToDb = async () => {
   try {

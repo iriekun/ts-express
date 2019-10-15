@@ -8,28 +8,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const express_1 = __importStar(require("express"));
+const auth_1 = __importDefault(require("./middleware/auth"));
 const morgan_1 = __importDefault(require("morgan"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const genres_1 = __importDefault(require("./routes/genres"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const genres_1 = __importDefault(require("./routes/genres"));
+const customer_1 = __importDefault(require("./routes/customer"));
+const movie_1 = __importDefault(require("./routes/movie"));
+const rental_1 = __importDefault(require("./routes/rental"));
+const auth_2 = __importDefault(require("./routes/auth"));
 exports.app = express_1.default();
-// app.use(cors);
-exports.app.use(body_parser_1.default.json);
-exports.app.use(body_parser_1.default.urlencoded({ extended: true }));
+exports.app.use(express_1.json());
+exports.app.use(express_1.urlencoded({ extended: true }));
 exports.app.use(morgan_1.default('dev'));
-// app.use(logging);
-exports.app.use('/api/genres', genres_1.default);
+exports.app.use('/api/genre', auth_1.default, genres_1.default);
+exports.app.use('/api/customer', customer_1.default);
+exports.app.use('/api/movie', movie_1.default);
+exports.app.use('/api/rental', rental_1.default);
+exports.app.use('/', auth_2.default);
 const connectToDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('connecting to db...');
-        const connected = yield mongoose_1.default.connect('mongodb://localhost/vidly', {
+        const connected = yield mongoose_1.default.connect('mongodb://localhost/vidnet:27017?replicaSet=rsName', {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useCreateIndex: true
         });
         if (connected)
             console.log('db connected');
@@ -39,12 +53,9 @@ const connectToDb = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const port = process.env.PORT || 5000;
-// export const start = async () => {
-//   await connectToDb();
-//   console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-//   console.log(`env = ${app.get('env')}`);
-//   app.listen(port, () => console.log(`server running on port ${port} ...`));
-// };
-exports.app.listen(port, function () {
-    console.log('Example app listening on port 3000!');
-});
+exports.app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
+    yield connectToDb();
+    console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`env = ${exports.app.get('env')}`);
+    console.log(`server running on port ${port}`);
+}));

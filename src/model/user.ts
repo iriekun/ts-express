@@ -26,17 +26,28 @@ export const userSchema = new Schema({
 
 export const User = models.User || model('User', userSchema);
 
-export type JoiSchema = {
+type SignUpSchema = {
   name: Joi.StringSchema;
   email: Joi.StringSchema;
   password: PasswordComplexity;
 };
 
-export const joiSchema: JoiSchema = {
+type LoginSchema = Pick<SignUpSchema, 'email' | 'password'>;
+
+export const signUpSchema: SignUpSchema = {
   name: Joi.string()
     .min(5)
     .max(50)
     .required(),
+  email: Joi.string()
+    .min(5)
+    .max(255)
+    .required()
+    .email(),
+  password: new PasswordComplexity()
+};
+
+export const loginSchema: LoginSchema = {
   email: Joi.string()
     .min(5)
     .max(255)
