@@ -9,11 +9,6 @@ type UserType = {
   email: string;
 };
 
-type Login = {
-  email: string;
-  password: string;
-};
-
 export const getCurrentUser = () => async (req: Request, res: Response) => {
   console.log(req.user);
   const user = await User.findById(req.user).select('-password');
@@ -34,7 +29,7 @@ export const signup = () => async (req: Request, res: Response) => {
       name: userModel.name,
       email: userModel.email
     };
-    const token = jwtSign(userModel._id);
+    const token = jwtSign(userModel._id, userModel.isAdmin);
     res
       .header('x-auth-token', token)
       .status(200)
@@ -59,15 +54,22 @@ export const login = () => async (req: Request, res: Response) => {
     if (!validPassword)
       return res.status(400).send('Invalid email or password');
 
-    const token = jwtSign(userModel._id);
-    res.status(200).json({ token });
+    const user: UserType = {
+      name: userModel.name,
+      email: userModel.email
+    };
+    const token = jwtSign(userModel._id, userModel.isAdmin);
+    res
+      .header('x-auth-token', token)
+      .status(200)
+      .json({ data: user });
   } catch (error) {
     console.log(error);
     res.status(400).end();
   }
 };
 
-const jwtSign = (id: string) => {
+const jwtSign = (id: string, isAdmin: boolean) => {
   //TODO : extract secret
-  return jwt.sign({ _id: id }, 'jwtPrivateKey');
+  return jwt.sign({ _id: id, isAdmin: isAdmin }, 'jwtPrivateKey');
 };

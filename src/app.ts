@@ -1,5 +1,4 @@
 import express, { Application, json, urlencoded } from 'express';
-import auth from './middleware/auth';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import genreRouter from './routes/genres';
@@ -14,11 +13,11 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
-app.use('/api/genre', auth, genreRouter);
+app.use('/api/genre', genreRouter);
 app.use('/api/customer', customerRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/rental', rentalRouter);
-app.use('/', auth, authRouter);
+app.use('/', authRouter);
 
 const connectToDb = async () => {
   try {

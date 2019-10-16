@@ -2,8 +2,10 @@ import { Router } from 'express';
 import { Movie, joiSchema } from '../model/Movie';
 import { getAll, update, remove, getById } from '../controller/crud';
 import { create } from '../controller/movie';
+import auth from './../middleware/auth';
 
 const router = Router();
+router.use('/', auth);
 
 // /api/genre
 router

@@ -1,15 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
-
 import { Router } from 'express';
 import { Customer, joiSchema } from '../model/customer';
 import { getAll, create, update, remove, getById } from '../controller/crud';
+import auth from './../middleware/auth';
 
 const router = Router();
+router.use('/', auth);
 
 // /api/genre
 router
