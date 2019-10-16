@@ -10,3 +10,5 @@ To use transaction in mongodb, it's required to have replica sets instead of sta
 To install mongodb replica set
 `npm install run-rs -g`
 Read more at https://www.npmjs.com/package/run-rs
+
+To use jest with typescript https://github.com/kulshekhar/ts-jest

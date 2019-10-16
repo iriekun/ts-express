@@ -6,8 +6,9 @@ import customerRouter from './routes/customer';
 import movieRouter from './routes/movie';
 import rentalRouter from './routes/rental';
 import authRouter from './routes/auth';
+import config from './config';
 
-export const app: Application = express();
+const app: Application = express();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -21,15 +22,12 @@ app.use('/', authRouter);
 
 const connectToDb = async () => {
   try {
-    console.log('connecting to db...');
-    const connected = await mongoose.connect(
-      'mongodb://localhost/vidnet:27017?replicaSet=rsName',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true
-      }
-    );
+    console.log(`connecting to db ${config.db}`);
+    const connected = await mongoose.connect(`mongodb://${config.db}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    });
     if (connected) console.log('db connected');
   } catch (error) {
     console.log(error);
@@ -43,3 +41,5 @@ app.listen(port, async () => {
   console.log(`env = ${app.get('env')}`);
   console.log(`server running on port ${port}`);
 });
+
+export default app;

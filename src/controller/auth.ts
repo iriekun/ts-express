@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { validateInput } from '../util/validation';
-import { User, signUpSchema, loginSchema } from '../model/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from './../config';
+import { validateInput } from '../util/validation';
+import { User, signUpSchema, loginSchema } from '../model/user';
 
 type UserType = {
   name: string;

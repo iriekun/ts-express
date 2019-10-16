@@ -2,6 +2,7 @@ const env = process.env.NODE_ENV || 'development';
 
 type EnvConfig = {
   secrets?: any;
+  db?: string;
 };
 let envConfig: EnvConfig = {};
 
