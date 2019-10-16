@@ -69,7 +69,7 @@ export const login = () => async (req: Request, res: Response) => {
   }
 };
 
-const jwtSign = (id: string, isAdmin: boolean) => {
+export const jwtSign = (id: string, isAdmin: boolean) => {
   //TODO : extract secret
   return jwt.sign({ _id: id, isAdmin: isAdmin }, 'jwtPrivateKey');
 };
