@@ -3,6 +3,7 @@ import { validateInput } from '../util/validation';
 import { User, signUpSchema, loginSchema } from '../model/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import config from './../config';
 
 type UserType = {
   name: string;
@@ -11,7 +12,7 @@ type UserType = {
 
 export const getCurrentUser = () => async (req: Request, res: Response) => {
   console.log(req.user);
-  const user = await User.findById(req.user).select('-password');
+  const user = await User.findById(req.user._id).select('-password');
   res.status(200).json({ data: user });
 };
 export const signup = () => async (req: Request, res: Response) => {
@@ -70,6 +71,5 @@ export const login = () => async (req: Request, res: Response) => {
 };
 
 export const jwtSign = (id: string, isAdmin: boolean) => {
-  //TODO : extract secret
-  return jwt.sign({ _id: id, isAdmin: isAdmin }, 'jwtPrivateKey');
+  return jwt.sign({ _id: id, isAdmin: isAdmin }, config.secrets.jwt);
 };
