@@ -15,6 +15,7 @@ export const getCurrentUser = () => async (req: Request, res: Response) => {
   const user = await User.findById(req.user._id).select('-password');
   res.status(200).json({ data: user });
 };
+
 export const signup = () => async (req: Request, res: Response) => {
   const { error } = validateInput(req.body, signUpSchema);
   if (error) return res.status(400).send(error.details[0].message);
@@ -70,6 +71,6 @@ export const login = () => async (req: Request, res: Response) => {
   }
 };
 
-export const jwtSign = (id: string, isAdmin: boolean) => {
+export const jwtSign = (id: string, isAdmin: boolean): string => {
   return jwt.sign({ _id: id, isAdmin: isAdmin }, config.secrets.jwt);
 };
