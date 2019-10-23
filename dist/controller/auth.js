@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const validation_1 = require("../util/validation");
-const user_1 = require("../model/user");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("./../config"));
+const validation_1 = require("../util/validation");
+const user_1 = require("../model/user");
 exports.getCurrentUser = () => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.header.prototype.user);
-    const user = yield user_1.User.findById(req.header.prototype.user).select('-password');
+    console.log(req.user);
+    const user = yield user_1.User.findById(req.user._id).select('-password');
     res.status(200).json({ data: user });
 });
 exports.signup = () => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -36,7 +37,7 @@ exports.signup = () => (req, res) => __awaiter(void 0, void 0, void 0, function*
             name: userModel.name,
             email: userModel.email
         };
-        const token = jwtSign(userModel._id);
+        const token = exports.jwtSign(userModel._id, userModel.isAdmin);
         res
             .header('x-auth-token', token)
             .status(200)
@@ -58,15 +59,21 @@ exports.login = () => (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const validPassword = yield bcrypt_1.default.compare(req.body.password, userModel.password);
         if (!validPassword)
             return res.status(400).send('Invalid email or password');
-        const token = jwtSign(userModel._id);
-        res.status(200).json({ token });
+        const user = {
+            name: userModel.name,
+            email: userModel.email
+        };
+        const token = exports.jwtSign(userModel._id, userModel.isAdmin);
+        res
+            .header('x-auth-token', token)
+            .status(200)
+            .json({ data: user });
     }
     catch (error) {
         console.log(error);
         res.status(400).end();
     }
 });
-const jwtSign = (id) => {
-    //TODO : extract secret
-    return jsonwebtoken_1.default.sign({ _id: id }, 'jwtPrivateKey');
+exports.jwtSign = (id, isAdmin) => {
+    return jsonwebtoken_1.default.sign({ _id: id, isAdmin: isAdmin }, config_1.default.secrets.jwt);
 };

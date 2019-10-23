@@ -1,15 +1,14 @@
 "use strict";
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const customer_1 = require("../model/customer");
 const crud_1 = require("../controller/crud");
+const auth_1 = __importDefault(require("./../middleware/auth"));
 const router = express_1.Router();
+router.use('/', auth_1.default);
 // /api/genre
 router
     .route('/')

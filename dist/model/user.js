@@ -25,6 +25,10 @@ exports.userSchema = new mongoose_1.Schema({
         required: true,
         minlength: 5,
         maxlength: 1024
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 exports.User = mongoose_1.models.User || mongoose_1.model('User', exports.userSchema);

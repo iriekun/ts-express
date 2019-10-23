@@ -1,10 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Movie_1 = require("../model/Movie");
 const crud_1 = require("../controller/crud");
 const movie_1 = require("../controller/movie");
+const auth_1 = __importDefault(require("./../middleware/auth"));
 const router = express_1.Router();
+router.use('/', auth_1.default);
 // /api/genre
 router
     .route('/')

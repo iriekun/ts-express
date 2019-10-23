@@ -1,4 +1,4 @@
-import express, { Application, json, urlencoded } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import genreRouter from './routes/genres';
@@ -8,10 +8,15 @@ import rentalRouter from './routes/rental';
 import authRouter from './routes/auth';
 import config from './config';
 
-const app: Application = express();
+const app: express.Application = express();
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is not defined');
+  process.exit(1);
+}
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
 app.use('/api/genre', genreRouter);
